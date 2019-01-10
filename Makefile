@@ -18,6 +18,7 @@ help:
 	@echo "  docker-stop         Stop and clear all services"
 	@echo "  gen-certs           Generate SSL certificates"
 	@echo "  logs                Follow log output"
+	@echo "  mysql-cli           Access mysql CLI"
 	@echo "  mysql-dump          Create backup of all databases"
 	@echo "  mysql-restore       Restore backup of all databases"
 	@echo "  phpmd               Analyse the API with PHP Mess Detector"
@@ -58,6 +59,9 @@ gen-certs:
 
 logs:
 	@docker-compose logs -f
+
+mysql-cli:
+	@docker exec -it $(shell docker-compose ps -q mysqldb) mysql -u"$(MYSQL_ROOT_USER)" -p"$(MYSQL_ROOT_PASSWORD)"
 
 mysql-dump:
 	@mkdir -p $(MYSQL_DUMPS_DIR)
