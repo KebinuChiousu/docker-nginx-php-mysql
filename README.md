@@ -82,9 +82,9 @@ This project use the following ports :
 | Server     | Port |
 |------------|------|
 | MySQL      | 8989 |
-| PHPMyAdmin | 8080 |
-| Nginx      | 8000 |
-| Nginx SSL  | 3000 |
+| PHPMyAdmin | 8889 |
+| Nginx      | 8888 |
+| Nginx SSL  | 3443 |
 
 ___
 
@@ -209,9 +209,9 @@ ___
 
 3. Open your favorite browser :
 
-    * [http://localhost:8000](http://localhost:8000/)
-    * [https://localhost:3000](https://localhost:3000/) ([HTTPS](#configure-nginx-with-ssl-certificates) not configured by default)
-    * [http://localhost:8080](http://localhost:8080/) PHPMyAdmin (username: dev, password: dev)
+    * [http://localhost:8888](http://localhost:8888/)
+    * [https://localhost:3443](https://localhost:3443/) ([HTTPS](#configure-nginx-with-ssl-certificates) not configured by default)
+    * [http://localhost:8889](http://localhost:8889/) PHPMyAdmin (username: dev, password: dev)
 
 4. Stop and clear services
 
