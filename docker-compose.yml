@@ -1,10 +1,58 @@
 version: '3'
 services:
-    wordpress:
-        image: wordpress
-        restart: always
+    dockerhost:
+        image: qoomon/docker-host
+        container_name: dockerhost
+        cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
+        restart: on-failure
+        networks:
+            - docker_lan
+    nginx:
+        build: ./docker/nginx
+        image: nginx-custom
+        container_name: nginx
+        env_file:
+            - ".env"
+        environment:
+            NGINX_DEBUG: ${NGINX_DEBUG}
+            WORDPRESS_URL: ${WORDPRESS_URL}
+        volumes:
+            - ./data/nginx:/etc/nginx/conf.d
+            - ./data/web:/var/www/html
+            - ./data/error:/var/www/html/error
+            - ./data/wordpress:/var/www/html/wordpress
+            - ./data/public:/var/www/html/public
+            - ./data/nextcloud:/var/www/html/nextcloud
+            - ./data/invoiceninja:/var/www/html/invoiceninja
+            - ./le/certs:/etc/letsencrypt
+            - ./le/data:/data/letsencrypt
         ports:
-            - "8888:80"
+            - "80:80"
+            - "443:443"
+        depends_on:
+            - dockerhost
+            - wordpress
+        restart: unless-stopped
+        networks:
+            - docker_lan
+    certbot:
+        build: docker/certbot
+        image: certbot-custom
+        container_name: certbot
+        env_file:
+            - ".env"
+        environment:
+            AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+            AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+            AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+        volumes:
+            - ./le/certs:/etc/letsencrypt
+            - ./le/data:/webroot
+        networks:
+            - docker_lan
+    wordpress:
+        image: wordpress:fpm-alpine
+        container_name: wordpress
         env_file:
             - ".env"
         environment:
@@ -12,9 +60,45 @@ services:
             WORDPRESS_DB_USER: ${MYSQL_USER}
             WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-            WORDPRESS_CONFIG_EXTRA: ${WORDPRESS_CONFIG_EXTRA}
         depends_on:
             - mysqldb
+        volumes:
+            - ./data/wordpress:/var/www/html
+            - ./data/public:/var/www/html/public
+        restart: unless-stopped
+        networks:
+            - docker_lan
+    nextcloud:
+        image: nextcloud:fpm
+        container_name: nextcloud
+        env_file:
+            - ".env"
+        environment:
+            MYSQL_HOST: ${MYSQL_HOST}
+            MYSQL_USER: ${NEXTCLOUD_USER}
+            MYSQL_PASSWORD: ${NEXTCLOUD_PASSWORD}
+            MYSQL_DATABASE: ${NEXTCLOUD_DATABASE}
+        volumes:
+            - ./data/nextcloud:/var/www/html
+        depends_on:
+            - mysqldb
+        restart: unless-stopped
+        networks:
+            - docker_lan
+    invoiceninja:
+        build: ./docker/php-fpm
+        image: meredithkm/deb-php-fpm:7.2
+        container_name: invoiceninja
+        links:
+          - mysqldb:mysql
+        env_file: .env
+        restart: always
+        volumes:
+            - ./data/invoiceninja:/var/www/app/
+        depends_on:
+            - mysqldb
+        networks:
+            - docker_lan
     myadmin:
         image: phpmyadmin/phpmyadmin
         container_name: phpmyadmin
@@ -26,6 +110,8 @@ services:
         restart: always
         depends_on:
             - mysqldb
+        networks:
+            - docker_lan
     mysqldb:
         image: mysql:${MYSQL_VERSION}
         container_name: ${MYSQL_HOST}
@@ -41,3 +127,10 @@ services:
             - "8989:3306"
         volumes:
             - "./data/db/mysql:/var/lib/mysql"
+        networks:
+            - docker_lan
+
+networks:
+  docker_lan:
+    external:
+      name: docker_lan
