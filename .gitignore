@@ -17,6 +17,7 @@ data/**/wordpress/*
 data/public/*
 data/**/index.html
 data/nginx/*
+!data/nginx/error.nginx
 !data/nginx/certbot.conf
 !data/nginx/wp.tmpl
 
