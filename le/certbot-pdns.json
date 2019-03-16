@@ -1,0 +1,5 @@
+{
+  "api-key": "changeme",
+  "base-url": "http://dockerhost:9190/api/v1",
+  "axfr-time": 0
+}
