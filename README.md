@@ -1,6 +1,6 @@
 # WordPress MySQL php mysqladmin
 
-Docker running Nginx, PHP-FPM, Composer, MySQL and PHPMyAdmin.
+Docker running a nginx, wordpress:fpm, MySQL and PHPMyAdmin.
 
 ## Overview
 
@@ -12,25 +12,9 @@ Docker running Nginx, PHP-FPM, Composer, MySQL and PHPMyAdmin.
 
     We’ll download the code from its repository on GitHub.
 
-3. [Configure Nginx With SSL Certificates](#configure-nginx-with-ssl-certificates) [`Optional`]
-
-    We'll generate and configure SSL certificate for nginx before running server.
-
-4. [Configure Xdebug](#configure-xdebug) [`Optional`]
-
-    We'll configure Xdebug for IDE (PHPStorm or Netbeans).
-
-5. [Run the application](#run-the-application)
-
-    By this point we’ll have all the project pieces in place.
-
-6. [Use Makefile](#use-makefile) [`Optional`]
+3. [Use Makefile](#use-makefile)
 
     When developing, you can use `Makefile` for doing recurrent operations.
-
-7. [Use Docker Commands](#use-docker-commands)
-
-    When running, you can use docker commands for doing recurrent operations.
 
 ___
 
@@ -54,7 +38,7 @@ Check Docker Compose compatibility :
 
 * [Compose file version 3 reference](https://docs.docker.com/compose/compose-file/)
 
-The following is optional but makes life more enjoyable :
+Check if `make`  is already installed by entering the following command : 
 
 ```sh
 which make
@@ -68,20 +52,23 @@ sudo apt install build-essential
 
 ### Images to use
 
+* [Nginx](https://hub.docker.com/_/nginx/)
 * [WordPress](https://hub.docker.com/_/wordpress/)
 * [MySQL](https://hub.docker.com/_/mysql/)
 * [PHPMyAdmin](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
+* [CertBot](https://hub.docker.com/r/certbot/certbot/)
+* [Generate Certificate](https://hub.docker.com/r/jacoelho/generate-certificate)
 
 You should be careful when installing third party web servers such as MySQL or Nginx.
 
 This project use the following ports :
 
-| Server     | Port |
-|------------|------|
-| MySQL      | 8989 |
-| PHPMyAdmin | 8889 |
-| Wordpress  | 8888 |
-
+| Server     |  Port  |
+|------------|--------|
+| MySQL      | 8989   |
+| PHPMyAdmin | 8889   |
+| Nginx      | 80/443 |
+|------------|--------|
 ___
 
 ## Clone the project
