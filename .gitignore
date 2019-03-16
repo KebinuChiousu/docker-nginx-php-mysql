@@ -5,24 +5,29 @@
 .*.swp
 .DS_Store
 
-# Application
-web/app/composer.json
-web/app/composer.lock
-web/app/vendor/
-web/app/doc/
-web/app/report/
-data/
+# mysql
+data/db/dumps/*
+data/db/mysql/*
 
-# PHPStorm
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/dictionaries
+# nginx / wordpress / nextcloud
+data/nextcloud/*
+data/web/public/*
+data/web/*.crt
+data/**/wordpress/*
+data/public/*
+data/**/index.html
+data/nginx/*
+!data/nginx/certbot.conf
+!data/nginx/wp.tmpl
 
-# Netbeans
-nbproject/
-/nbproject/
-/nbproject/private/
-/nbproject/private/private.properties
+# invoiceninja
+data/invoiceninja/*
 
-# SSL Certs
-etc/ssl/
+
+# letsencrtypt
+!/data/web/public/certbot.htm
+le/data/*
+le/certs/*
+
+# process .gitkeep
+!**/.gitkeep
